@@ -1,0 +1,24 @@
+stages:
+  - test
+  
+variables:
+  DOCKER_HOST: tcp://docker:2375/
+  DOCKER_DRIVER: overlay2
+
+run_tests:
+  image:
+    name: docker/compose:1.24.1
+    entrypoint: ["/bin/sh", "-c"]
+  services:
+    - docker:dind
+  script: docker-compose -f docker-compose.test.yaml up -d database && docker-compose -f docker-compose.test.yaml up -d && docker-compose logs -f project
+  coverage: '/TOTAL.*\s+(\d+%)$/'
+  artifacts:
+    paths:
+      - test-report.xml
+      - htmlcov
+    reports:
+      junit: test-report.xml
+  only:
+    - merge_requests
+    - master

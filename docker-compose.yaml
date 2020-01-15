@@ -1,0 +1,23 @@
+version: "3"
+services:
+  database:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: user
+    volumes:
+      - ./database_scripts:/docker-entrypoint-initdb.d:z
+      - ./__postgres_data__:/var/lib/postgresql/data:z
+  
+  project:
+    build:
+      args:
+        - DJANGO_SETTINGS_MODULE=project.settings.local
+        - MODE=local
+      context: .
+    depends_on:
+      - database
+    volumes:
+      - ./:/code:z
+    ports:
+      - 8000:80

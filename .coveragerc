@@ -1,0 +1,6 @@
+[report]
+omit = helpers/apps.py
+       helpers/urls.py
+       helpers/serializers.py
+       helpers/management/*
+exclude_lines = # pragma: no cover

@@ -1,0 +1,623 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Project name",
+        "description": "Project swagger",
+        "contact": {
+            "email": "dimonluk2.0@gmail.com"
+        },
+        "version": "v0.0.1"
+    },
+    "basePath": "/",
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "securityDefinitions": {
+        "Basic": {
+            "type": "basic"
+        },
+        "Bearer": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    },
+    "security": [
+        {
+            "Basic": []
+        },
+        {
+            "Bearer": []
+        }
+    ],
+    "paths": {
+        "/helpers/healthcheck/": {
+            "get": {
+                "operationId": "helpers_healthcheck_list",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Detail"
+                        }
+                    },
+                    "400": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Detail"
+                        }
+                    },
+                    "401": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Detail"
+                        }
+                    },
+                    "403": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Detail"
+                        }
+                    },
+                    "404": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Detail"
+                        }
+                    },
+                    "500": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Detail"
+                        }
+                    }
+                },
+                "tags": [
+                    "helpers"
+                ]
+            },
+            "parameters": []
+        },
+        "/rest-auth/login/": {
+            "post": {
+                "operationId": "rest-auth_login_create",
+                "description": "Check the credentials and return the REST Token\nif the credentials are valid and authenticated.\nCalls Django Auth login method to register User ID\nin Django session framework\n\nAccept the following POST parameters: username, password\nReturn the REST Framework Token Object's key.",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Login"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Login"
+                        }
+                    }
+                },
+                "tags": [
+                    "rest-auth"
+                ]
+            },
+            "parameters": []
+        },
+        "/rest-auth/logout/": {
+            "get": {
+                "operationId": "rest-auth_logout_list",
+                "summary": "Calls Django logout method and delete the Token object\nassigned to the current User object.",
+                "description": "Accepts/Returns nothing.",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "rest-auth"
+                ]
+            },
+            "post": {
+                "operationId": "rest-auth_logout_create",
+                "summary": "Calls Django logout method and delete the Token object\nassigned to the current User object.",
+                "description": "Accepts/Returns nothing.",
+                "parameters": [],
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "rest-auth"
+                ]
+            },
+            "parameters": []
+        },
+        "/rest-auth/password/change/": {
+            "post": {
+                "operationId": "rest-auth_password_change_create",
+                "summary": "Calls Django Auth SetPasswordForm save method.",
+                "description": "Accepts the following POST parameters: new_password1, new_password2\nReturns the success/fail message.",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/PasswordChange"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/PasswordChange"
+                        }
+                    }
+                },
+                "tags": [
+                    "rest-auth"
+                ]
+            },
+            "parameters": []
+        },
+        "/rest-auth/password/reset/": {
+            "post": {
+                "operationId": "rest-auth_password_reset_create",
+                "summary": "Calls Django Auth PasswordResetForm save method.",
+                "description": "Accepts the following POST parameters: email\nReturns the success/fail message.",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/PasswordReset"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/PasswordReset"
+                        }
+                    }
+                },
+                "tags": [
+                    "rest-auth"
+                ]
+            },
+            "parameters": []
+        },
+        "/rest-auth/password/reset/confirm/": {
+            "post": {
+                "operationId": "rest-auth_password_reset_confirm_create",
+                "summary": "Password reset e-mail link is confirmed, therefore\nthis resets the user's password.",
+                "description": "Accepts the following POST parameters: token, uid,\n    new_password1, new_password2\nReturns the success/fail message.",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/PasswordResetConfirm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/PasswordResetConfirm"
+                        }
+                    }
+                },
+                "tags": [
+                    "rest-auth"
+                ]
+            },
+            "parameters": []
+        },
+        "/rest-auth/refresh-token": {
+            "post": {
+                "operationId": "rest-auth_refresh-token_create",
+                "summary": "API View that returns a refreshed token (with new expiration) based on\nexisting token",
+                "description": "If 'orig_iat' field (original issued-at-time) is found, will first check\nif it's within expiration window, then copy it to the new token",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/RefreshJSONWebToken"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/RefreshJSONWebToken"
+                        }
+                    }
+                },
+                "tags": [
+                    "rest-auth"
+                ]
+            },
+            "parameters": []
+        },
+        "/rest-auth/registration/": {
+            "post": {
+                "operationId": "rest-auth_registration_create",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Register"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/Register"
+                        }
+                    }
+                },
+                "tags": [
+                    "rest-auth"
+                ]
+            },
+            "parameters": []
+        },
+        "/rest-auth/registration/verify-email/": {
+            "post": {
+                "operationId": "rest-auth_registration_verify-email_create",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/VerifyEmail"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/VerifyEmail"
+                        }
+                    }
+                },
+                "tags": [
+                    "rest-auth"
+                ]
+            },
+            "parameters": []
+        },
+        "/rest-auth/user/": {
+            "get": {
+                "operationId": "rest-auth_user_read",
+                "summary": "Reads and updates UserModel fields\nAccepts GET, PUT, PATCH methods.",
+                "description": "Default accepted fields: username, first_name, last_name\nDefault display fields: pk, username, email, first_name, last_name\nRead-only fields: pk, email\n\nReturns UserModel fields.",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/UserDetails"
+                        }
+                    }
+                },
+                "tags": [
+                    "rest-auth"
+                ]
+            },
+            "put": {
+                "operationId": "rest-auth_user_update",
+                "summary": "Reads and updates UserModel fields\nAccepts GET, PUT, PATCH methods.",
+                "description": "Default accepted fields: username, first_name, last_name\nDefault display fields: pk, username, email, first_name, last_name\nRead-only fields: pk, email\n\nReturns UserModel fields.",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/UserDetails"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/UserDetails"
+                        }
+                    }
+                },
+                "tags": [
+                    "rest-auth"
+                ]
+            },
+            "patch": {
+                "operationId": "rest-auth_user_partial_update",
+                "summary": "Reads and updates UserModel fields\nAccepts GET, PUT, PATCH methods.",
+                "description": "Default accepted fields: username, first_name, last_name\nDefault display fields: pk, username, email, first_name, last_name\nRead-only fields: pk, email\n\nReturns UserModel fields.",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/UserDetails"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/UserDetails"
+                        }
+                    }
+                },
+                "tags": [
+                    "rest-auth"
+                ]
+            },
+            "parameters": []
+        }
+    },
+    "definitions": {
+        "MetaInfoInnerSerializerMixin": {
+            "title": " meta info",
+            "type": "object",
+            "properties": {
+                "application_version": {
+                    "title": "Application version",
+                    "type": "string",
+                    "readOnly": true,
+                    "minLength": 1
+                },
+                "timestamp": {
+                    "title": "Timestamp",
+                    "type": "string",
+                    "readOnly": true,
+                    "minLength": 1
+                },
+                "response_hash": {
+                    "title": "Response hash",
+                    "type": "string",
+                    "readOnly": true,
+                    "minLength": 1
+                }
+            }
+        },
+        "Detail": {
+            "type": "object",
+            "properties": {
+                "detail": {
+                    "title": "Detail",
+                    "type": "string",
+                    "readOnly": true,
+                    "minLength": 1
+                },
+                "_meta_info": {
+                    "$ref": "#/definitions/MetaInfoInnerSerializerMixin"
+                }
+            }
+        },
+        "Login": {
+            "required": [
+                "password"
+            ],
+            "type": "object",
+            "properties": {
+                "username": {
+                    "title": "Username",
+                    "type": "string"
+                },
+                "email": {
+                    "title": "Email",
+                    "type": "string",
+                    "format": "email"
+                },
+                "password": {
+                    "title": "Password",
+                    "type": "string",
+                    "minLength": 1
+                }
+            }
+        },
+        "PasswordChange": {
+            "required": [
+                "old_password",
+                "new_password1",
+                "new_password2"
+            ],
+            "type": "object",
+            "properties": {
+                "old_password": {
+                    "title": "Old password",
+                    "type": "string",
+                    "maxLength": 128,
+                    "minLength": 1
+                },
+                "new_password1": {
+                    "title": "New password1",
+                    "type": "string",
+                    "maxLength": 128,
+                    "minLength": 1
+                },
+                "new_password2": {
+                    "title": "New password2",
+                    "type": "string",
+                    "maxLength": 128,
+                    "minLength": 1
+                }
+            }
+        },
+        "PasswordReset": {
+            "required": [
+                "email"
+            ],
+            "type": "object",
+            "properties": {
+                "email": {
+                    "title": "Email",
+                    "type": "string",
+                    "format": "email",
+                    "minLength": 1
+                }
+            }
+        },
+        "PasswordResetConfirm": {
+            "required": [
+                "new_password1",
+                "new_password2",
+                "uid",
+                "token"
+            ],
+            "type": "object",
+            "properties": {
+                "new_password1": {
+                    "title": "New password1",
+                    "type": "string",
+                    "maxLength": 128,
+                    "minLength": 1
+                },
+                "new_password2": {
+                    "title": "New password2",
+                    "type": "string",
+                    "maxLength": 128,
+                    "minLength": 1
+                },
+                "uid": {
+                    "title": "Uid",
+                    "type": "string",
+                    "minLength": 1
+                },
+                "token": {
+                    "title": "Token",
+                    "type": "string",
+                    "minLength": 1
+                }
+            }
+        },
+        "RefreshJSONWebToken": {
+            "required": [
+                "token"
+            ],
+            "type": "object",
+            "properties": {
+                "token": {
+                    "title": "Token",
+                    "type": "string",
+                    "minLength": 1
+                }
+            }
+        },
+        "Register": {
+            "required": [
+                "email",
+                "password1",
+                "password2"
+            ],
+            "type": "object",
+            "properties": {
+                "username": {
+                    "title": "Username",
+                    "type": "string",
+                    "maxLength": 150,
+                    "minLength": 1
+                },
+                "email": {
+                    "title": "Email",
+                    "type": "string",
+                    "format": "email",
+                    "minLength": 1
+                },
+                "password1": {
+                    "title": "Password1",
+                    "type": "string",
+                    "minLength": 1
+                },
+                "password2": {
+                    "title": "Password2",
+                    "type": "string",
+                    "minLength": 1
+                }
+            }
+        },
+        "VerifyEmail": {
+            "required": [
+                "key"
+            ],
+            "type": "object",
+            "properties": {
+                "key": {
+                    "title": "Key",
+                    "type": "string",
+                    "minLength": 1
+                }
+            }
+        },
+        "UserDetails": {
+            "required": [
+                "username"
+            ],
+            "type": "object",
+            "properties": {
+                "pk": {
+                    "title": "ID",
+                    "type": "integer",
+                    "readOnly": true
+                },
+                "username": {
+                    "title": "Username",
+                    "description": "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.",
+                    "type": "string",
+                    "pattern": "^[\\w.@+-]+$",
+                    "maxLength": 150,
+                    "minLength": 1
+                },
+                "email": {
+                    "title": "Email address",
+                    "type": "string",
+                    "format": "email",
+                    "readOnly": true,
+                    "minLength": 1
+                },
+                "first_name": {
+                    "title": "First name",
+                    "type": "string",
+                    "maxLength": 30
+                },
+                "last_name": {
+                    "title": "Last name",
+                    "type": "string",
+                    "maxLength": 150
+                }
+            }
+        }
+    }
+}

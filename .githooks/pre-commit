@@ -1,0 +1,5 @@
+#!/bin/sh
+
+
+python manage.py generate_swagger -o docs/swagger.json
+git add docs/swagger.json
