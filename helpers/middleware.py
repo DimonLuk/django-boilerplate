@@ -41,19 +41,19 @@ class _BaseResponseMetaInformationMiddleware:
         return response
 
     def _modify_response(self, response):
-        self._include_version(response)
-        self._include_timestamp(response)
-        self._include_hash(response)
+        self._include_version_if_required(response)
+        self._include_timestamp_if_required(response)
+        self._include_hash_if_required(response)
 
-    def _include_version(self, response):
+    def _include_version_if_required(self, response):
         if self._is_include_meta_info and self._is_include_version:
             response[self.version_field] = self._get_appicaltion_version()
 
-    def _include_timestamp(self, response):
+    def _include_timestamp_if_required(self, response):
         if self._is_include_meta_info and self._is_include_timestamp:
             response[self.timestamp_field] = self._get_timestamp()
 
-    def _include_hash(self, response):
+    def _include_hash_if_required(self, response):
         if self._is_include_meta_info and self._is_include_hash:
             response[self.hash_field] = self._get_hash(response)
 
@@ -105,9 +105,9 @@ class ResponseMetaInformationInJsonMiddleware(
         if json_data and self._is_include_meta_info:
             meta_info = {}
 
-            self._include_version(meta_info)
-            self._include_timestamp(meta_info)
-            self._include_hash(meta_info)
+            self._include_version_if_required(meta_info)
+            self._include_timestamp_if_required(meta_info)
+            self._include_hash_if_required(meta_info)
 
             json_data["_meta_info"] = meta_info
             response.content = json.dumps(json_data).encode()
