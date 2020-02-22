@@ -1,5 +1,8 @@
 from django.core.management.base import BaseCommand
-from ..docker_compose import RunTestsTerminalCommand, RunTestsInShellTerminalCommand
+from ..docker_compose import (
+    RunTestsTerminalCommand,
+    RunTestsInShellTerminalCommand,
+)
 
 
 class Command(BaseCommand):

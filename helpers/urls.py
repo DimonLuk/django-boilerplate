@@ -14,7 +14,11 @@ if settings.MODE in ("dev", "qa", "prod") and settings.HELPERS.get(
     from django.views.static import serve
 
     urlpatterns.append(
-        re_path("^static/(?P<path>.*)$", serve, {"document_root": settings.STATIC_ROOT})
+        re_path(
+            "^static/(?P<path>.*)$",
+            serve,
+            {"document_root": settings.STATIC_ROOT},
+        )
     )
 
 

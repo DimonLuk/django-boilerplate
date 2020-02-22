@@ -50,7 +50,10 @@ class BaseTerminalCommand:
 
     @property
     def full_command(self):
-        if os.environ.get(ALLOW_SUDO_USAGE_ENV_VAR, None) and self.sudo_required:
+        if (
+            os.environ.get(ALLOW_SUDO_USAGE_ENV_VAR, None)
+            and self.sudo_required
+        ):
             return f"sudo {self.command}"
         else:
             return self.command
@@ -172,7 +175,9 @@ class RunTestsInShellTerminalCommand(BaseTerminalCommand):
         BuildDockerComposeTestImagesTerminalCommand(),
         StartTestDatabaseTerminalCommand(),
     ]
-    command = "docker-compose -f docker-compose.test.yaml run project /bin/bash"
+    command = (
+        "docker-compose -f docker-compose.test.yaml run project /bin/bash"
+    )
 
 
 class RunAppTerminalCommand(BaseTerminalCommand):

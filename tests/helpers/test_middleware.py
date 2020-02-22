@@ -33,7 +33,9 @@ def test_error_formatter_middleware(get_error_response, settings):
     assert json.loads(response.content) == {"detail": "Internal server error"}
 
 
-def test_error_formatter_middleware_success_response(get_success_response, settings):
+def test_error_formatter_middleware_success_response(
+    get_success_response, settings
+):
     settings.HELPERS["ERROR_CODES_TO_CATCH"] = [500]
     settings.DEBUG = False
     middleware = ErrorFormatterMiddleware(get_success_response)
@@ -57,9 +59,14 @@ def test_response_meta_info_in_json(get_success_response, settings, snapshot):
 
 
 @freeze_time("2020-01-01")
-def test_response_meta_info_in_headers(get_success_response, settings, snapshot):
+def test_response_meta_info_in_headers(
+    get_success_response, settings, snapshot
+):
     settings.HELPERS.update(
-        {"META_INFO_IN_HEADERS": True, "META_INFO": ["version", "hash", "timestamp"]}
+        {
+            "META_INFO_IN_HEADERS": True,
+            "META_INFO": ["version", "hash", "timestamp"],
+        }
     )
     settings.DEBUG = False
     middleware = ResponseMetaInformationMiddleware(get_success_response)

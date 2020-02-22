@@ -24,7 +24,9 @@ DATABASES = {
 
 
 # SENTRY SETTINGS
-sentry_logging = LoggingIntegration(level=logging.WARNING, event_level=logging.ERROR)
+sentry_logging = LoggingIntegration(
+    level=logging.WARNING, event_level=logging.ERROR
+)
 sentry_sdk.init(
     dsn=os.environ.get("SENTRY_DSN"),
     integrations=[DjangoIntegration(), sentry_logging],
