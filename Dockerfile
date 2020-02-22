@@ -27,11 +27,11 @@ ENV SENTRY_DSN $SENTRY_DSN
 WORKDIR /code
 
 RUN apt-get update && apt-get install -y gcc && pip install pipenv
-ADD ./Pipfile /code/Pipfile
-ADD ./Pipfile.lock /code/Pipfile.lock
+COPY ./Pipfile /code/Pipfile
+COPY ./Pipfile.lock /code/Pipfile.lock
 RUN if [ "$MODE" = "local" ] || [ "$MODE" = "testing" ] ; then pipenv install --ignore-pipfile --dev --system ; fi
 RUN if [ "$MODE" = "dev" ] || [ "$MODE" = "qa" ] || [ "$MODE" = "prod" ] ; then pipenv install --ignore-pipfile --system && python manage.py collectstatic --noinput ; fi
 RUN apt-get remove -y gcc && apt-get autoremove -y
 
-ADD . /code
-CMD ./docker-entrypoint.sh
+COPY . /code
+CMD ./startup-script.sh
