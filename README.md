@@ -19,9 +19,9 @@ $ cd my_project
 $ rm -rf .git
 $ git init
 $ git commit -m "Initial commit"
-$ pip install pipenv
-$ pipenv shell
-$ pipenv install --dev
+$ pip install poetry
+$ poetry install
+$ poetry shell
 $ export HELPERS_ALLOW_SUDO=1 # read Custom django management command section
 $ python manage.py run_in_docker --noninteractive # Now your application is accessible at localhost:8000
 ```
