@@ -10,7 +10,7 @@ snapshots = Snapshot()
 snapshots['test_response_meta_info_in_json Meta info in json'] = {
     '_meta_info': {
         'application_version': '0.0.1',
-        'response_hash': '30b780f86ed4aa9cadcc52f62a0f617e',
+        'response_hash': '349a579265843f4412d30d59a70e3711',
         'timestamp': '2020-01-01T00:00:00.000000Z'
     },
     'detail': 'Everything works'
@@ -39,11 +39,22 @@ snapshots['test_response_meta_info_in_headers Meta info with headers'] = {
     )
 }
 
-snapshots['test_not_response_meta_info Response'] = {
+snapshots['test_not_response_meta_info[ResponseMetaInformationInHeadersMiddleware] Response'] = {
     'detail': 'Everything works'
 }
 
-snapshots['test_not_response_meta_info Meta info with headers'] = {
+snapshots['test_not_response_meta_info[ResponseMetaInformationInHeadersMiddleware] Meta info with headers'] = {
+    'content-type': (
+        'Content-Type',
+        'application/json'
+    )
+}
+
+snapshots['test_not_response_meta_info[ResponseMetaInformationInJsonMiddleware] Response'] = {
+    'detail': 'Everything works'
+}
+
+snapshots['test_not_response_meta_info[ResponseMetaInformationInJsonMiddleware] Meta info with headers'] = {
     'content-type': (
         'Content-Type',
         'application/json'
