@@ -2,7 +2,8 @@ import pytest
 from django.http import JsonResponse
 from helpers.middleware import (
     ErrorFormatterMiddleware,
-    ResponseMetaInformationMiddleware,
+    ResponseMetaInformationInJsonMiddleware,
+    ResponseMetaInformationInHeadersMiddleware,
 )
 import json
 from freezegun import freeze_time
@@ -48,11 +49,11 @@ def test_error_formatter_middleware_success_response(
 def test_response_meta_info_in_json(get_success_response, settings, snapshot):
     settings.HELPERS.update(
         {
-            "META_INFO_IN_JSON_RESPONSE": True,
+            "INCLUDE_META_INFO": True,
             "META_INFO": ["version", "hash", "timestamp"],
         }
     )
-    middleware = ResponseMetaInformationMiddleware(get_success_response)
+    middleware = ResponseMetaInformationInJsonMiddleware(get_success_response)
     response = middleware(None)
     assert response.status_code == 200
     snapshot.assert_match(json.loads(response.content), "Meta info in json")
@@ -64,25 +65,34 @@ def test_response_meta_info_in_headers(
 ):
     settings.HELPERS.update(
         {
-            "META_INFO_IN_HEADERS": True,
+            "INCLUDE_META_INFO": True,
             "META_INFO": ["version", "hash", "timestamp"],
         }
     )
     settings.DEBUG = False
-    middleware = ResponseMetaInformationMiddleware(get_success_response)
+    middleware = ResponseMetaInformationInHeadersMiddleware(
+        get_success_response
+    )
     response = middleware(None)
     assert response.status_code == 200
     snapshot.assert_match(json.loads(response.content), "Response")
     snapshot.assert_match(response._headers, "Meta info with headers")
 
 
+@pytest.mark.parametrize(
+    "middleware_class",
+    [
+        ResponseMetaInformationInHeadersMiddleware,
+        ResponseMetaInformationInJsonMiddleware,
+    ],
+)
 @freeze_time("2020-01-01")
-def test_not_response_meta_info(get_success_response, settings, snapshot):
-    settings.HELPERS.update(
-        {"META_INFO_IN_HEADERS": False, "META_INFO_IN_JSON_RESPONSE": False}
-    )
+def test_not_response_meta_info(
+    get_success_response, settings, snapshot, middleware_class
+):
+    settings.HELPERS.update({"INCLUDE_META_INFO": False})
     settings.DEBUG = False
-    middleware = ResponseMetaInformationMiddleware(get_success_response)
+    middleware = middleware_class(get_success_response)
     response = middleware(None)
     assert response.status_code == 200
     snapshot.assert_match(json.loads(response.content), "Response")
