@@ -176,7 +176,8 @@ In this section you can find schemes that are not from installed packages but we
 
 In this section you can find middleware that are not from installed packages but were written especially for this template
 - ErrorFormatterMiddleware - middleware that catches errors (by error codes that you specify in `HELPERS` dict in the settings) and formats them to the following shape `{"detail": "Internal server error"}`.
-- ResponseMetaInformationMiddleware - middleware that adds some meta information to response. Meta info can be added to headers of any response or to response payload of json responses. Again it's controlled by `HELPERS` dict in settings.
+- ResponseMetaInformationInHeadersMiddleware - middleware that adds meta information to responses headers. Currently supported meta information: application version, timestamp, response hash. By default it's included
+- ResponseMetaInformationInJsonMiddleware - middleware that adds meta information to response json payload (if response contains such json payload). Currently supported meta information: application version, timestamp, response hash. By default it's included
 
 
 Headers with meta info:
