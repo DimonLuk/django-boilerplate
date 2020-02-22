@@ -401,11 +401,11 @@
                 "timestamp": {
                     "title": "Timestamp",
                     "type": "string",
-                    "readOnly": true,
-                    "minLength": 1
+                    "format": "date-time",
+                    "readOnly": true
                 },
-                "response_hash": {
-                    "title": "Response hash",
+                "hash": {
+                    "title": "Hash",
                     "type": "string",
                     "readOnly": true,
                     "minLength": 1
