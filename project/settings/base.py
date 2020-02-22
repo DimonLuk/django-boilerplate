@@ -7,8 +7,6 @@ HELPERS = {
     "PROJECT_URL": "http://localhost:8000",
     "SWAGGER_SCHEMA_NO_AUTH": True,
     "INCLUDE_META_INFO": True,
-    "META_INFO_IN_JSON_RESPONSE": True,
-    # "META_INFO_IN_HEADERS": True,
     "META_INFO": ["version", "hash", "timestamp"],
     "APPLICATION_VERSION": "0.0.1",
     "ERROR_CODES_TO_CATCH": [500],
@@ -57,7 +55,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "helpers.middleware.ResponseMetaInformationMiddleware",
+    "helpers.middleware.ResponseMetaInformationInHeadersMiddleware",
+    "helpers.middleware.ResponseMetaInformationInJsonMiddleware",
     "helpers.middleware.ErrorFormatterMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
