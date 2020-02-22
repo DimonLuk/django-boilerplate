@@ -24,6 +24,7 @@ $ poetry install
 $ poetry shell
 $ export HELPERS_ALLOW_SUDO=1 # read Custom django management command section
 $ python manage.py run_in_docker --noninteractive # Now your application is accessible at localhost:8000
+# ATTENTION!!! Check dockerfile section, which explains how to add your code!!!!
 ```
 
 
@@ -98,6 +99,22 @@ Repository contains 2 docker-compose files. One for running tests and one for ru
 
 # Dockerfile
 
+
+ATTENTION!!! Don't forget to add your newly created directories to Dockerfile, otherwise they won't appear inside image which means your code will never be executed!! To add directory with your code, find the following string inside **Dockerfile**:
+```Dockerfile
+COPY LICENSE manage.py poetry.lock pyproject.toml startup-script.sh /code/
+COPY database_scripts /code/database_scripts
+COPY helpers /code/helpers
+COPY project /code/project
+```
+After the last `COPY` statement add the following code:
+```Dockerfile
+COPY path/to/your/dir /code/path/to/your/dir
+```
+For example if you create new django application called my_app, then you'll have to add the following code:
+```Dockerfile
+COPY my_app /code/my_app
+```
 
 Dockerfile is based on python3.8-slim image. Accepts the following build arguments:
 - MODE - required, can be one of **local**, **testing**, **dev**, **qa** and **prod** which corresponds to environment where container will be run this also corresponds to set of settings that will be chosen.
