@@ -1,0 +1,39 @@
+[tool.poetry]
+name = "django-boilerplate"
+version = "0.0.1"
+license = "MIT"
+authors = [
+  "Dmytro Lukashov <dimonluk2.0@gmail.com>"
+]
+repository = "https://github.com/DimonLuk/django-boilerplate"
+homepage = "https://github.com/DimonLuk/django-boilerplate"
+description = "Boilerplate for django applications"
+
+[tool.poetry.dependencies]
+python = "~3.8"
+
+django = {version = "*"}
+djangorestframework = {version = "*"}
+psycopg2-binary = {version = "*"}
+requests = {version = "*"}
+uvicorn = {version = "*"}
+sentry-sdk = {version = "*"}
+django-cors-headers = {version = "*"}
+drf_yasg = {version = "*"}
+django-grappelli = {version = "*"}
+django-allauth = {version = "*"}
+django-rest-auth = {version = "*"}
+djangorestframework-jwt = {version = "*"}
+django-debug-toolbar = {version = "*"}
+
+[tool.poetry.dev-dependencies]
+pudb = {version = "*"}
+django-extensions = {version = "*"}
+Werkzeug = {version = "*"}
+pytest = {version = "*"}
+pytest-django = {version = "*"}
+pytest-pudb = {version = "*"}
+pytest-cov = {version = "*"}
+snapshottest = {version = "*"}
+freezegun = {version = "*"}
+factory-boy = {version = "*"}
