@@ -26,11 +26,14 @@ ENV SENTRY_DSN $SENTRY_DSN
 
 WORKDIR /code
 
+COPY LICENSE manage.py poetry.lock pyproject.toml startup-script.sh /code/
+COPY database_scripts /code/database_scripts
+COPY helpers /code/helpers
+COPY project /code/project
+
 RUN apt-get update && apt-get install -y gcc && pip install poetry pip-autoremove && poetry config virtualenvs.create false
-COPY poetry.lock pyproject.toml /code/
 RUN if [ "$MODE" = "local" ] || [ "$MODE" = "testing" ] ; then poetry install -n ; fi
 RUN if [ "$MODE" = "dev" ] || [ "$MODE" = "qa" ] || [ "$MODE" = "prod" ] ; then poetry install -n --no-dev && python manage.py collectstatic --noinput ; fi
 RUN apt-get remove -y gcc && apt-get autoremove -y && pip-autoremove -y poetry pip-autoremove
 
-COPY . /code
 CMD ./startup-script.sh
