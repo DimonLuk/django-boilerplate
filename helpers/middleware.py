@@ -97,7 +97,7 @@ class ResponseMetaInformationInJsonMiddleware(
 ):
     version_field = "application_version"
     timestamp_field = "timestamp"
-    hash_field = "response_hash"
+    hash_field = "hash"
 
     def _modify_response(self, response):
         json_data = self._get_json_data(response)

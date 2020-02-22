@@ -10,7 +10,7 @@ snapshots = Snapshot()
 snapshots['test_response_meta_info_in_json Meta info in json'] = {
     '_meta_info': {
         'application_version': '0.0.1',
-        'response_hash': '349a579265843f4412d30d59a70e3711',
+        'hash': '349a579265843f4412d30d59a70e3711',
         'timestamp': '2020-01-01T00:00:00.000000Z'
     },
     'detail': 'Everything works'
