@@ -87,12 +87,8 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",  # NOQA
     },
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
-    {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"
-    },
+    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
@@ -141,24 +137,40 @@ SWAGGER_SETTINGS = {
 
 
 # DEBUG TOOLBAR SETTINGS
-def is_toolbar_visible(request):
-    result = not request.is_ajax()
-    result &= HELPERS.get("ENABLE_DEBUG_TOOLBAR", False)
-    user_in_request = getattr(request, "user", None)
-    if result and user_in_request:
-        username = getattr(request.user, "username", None)
-        email = getattr(request.user, "email", None)
-        is_superuser = username in HELPERS.get(
+class IsToolbarVisibleChecker:
+    def __call__(self, request):
+        user = self._get_user(request)
+        result = self._not_ajax(request)
+        result &= self._env_variable_set_to_true
+        result &= self._check_user_satisfies_conditions(result, user)
+        return result
+
+    def _get_user(self, request):
+        return getattr(request, "user", None)
+
+    def _not_ajax(self, request):
+        return not request.is_ajax()
+
+    @property
+    def _env_variable_set_to_true(self):
+        return HELPERS.get("ENABLE_DEBUG_TOOLBAR", False)
+
+    def _check_user_satisfies_conditions(self, result, user):
+        if result and user:
+            username = getattr(user, "username", None)
+            email = getattr(user, "email", None)
+            return self._is_superuser(username, email)
+        else:
+            return False
+
+    def _is_superuser(self, username, email):
+        return username in HELPERS.get(
             "SUPERUSER_USERNAMES", []
         ) or email in HELPERS.get("SUPERUSER_EMAILS", [])
-        result &= is_superuser
-    else:
-        result = False
-    return result
 
 
 DEBUG_TOOLBAR_CONFIG = {
-    "SHOW_TOOLBAR_CALLBACK": is_toolbar_visible,
+    "SHOW_TOOLBAR_CALLBACK": IsToolbarVisibleChecker(),
 }
 
 
