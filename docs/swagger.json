@@ -389,7 +389,7 @@
     },
     "definitions": {
         "MetaInfoInnerSerializerMixin": {
-            "title": " meta info",
+            "title": "meta info",
             "type": "object",
             "properties": {
                 "application_version": {

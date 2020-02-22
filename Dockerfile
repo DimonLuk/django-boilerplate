@@ -26,12 +26,11 @@ ENV SENTRY_DSN $SENTRY_DSN
 
 WORKDIR /code
 
-RUN apt-get update && apt-get install -y gcc && pip install pipenv
-COPY ./Pipfile /code/Pipfile
-COPY ./Pipfile.lock /code/Pipfile.lock
-RUN if [ "$MODE" = "local" ] || [ "$MODE" = "testing" ] ; then pipenv install --ignore-pipfile --dev --system ; fi
-RUN if [ "$MODE" = "dev" ] || [ "$MODE" = "qa" ] || [ "$MODE" = "prod" ] ; then pipenv install --ignore-pipfile --system && python manage.py collectstatic --noinput ; fi
-RUN apt-get remove -y gcc && apt-get autoremove -y
+RUN apt-get update && apt-get install -y gcc && pip install poetry pip-autoremove && poetry config virtualenvs.create false
+COPY poetry.lock pyproject.toml /code/
+RUN if [ "$MODE" = "local" ] || [ "$MODE" = "testing" ] ; then poetry install -n ; fi
+RUN if [ "$MODE" = "dev" ] || [ "$MODE" = "qa" ] || [ "$MODE" = "prod" ] ; then poetry install -n --no-dev && python manage.py collectstatic --noinput ; fi
+RUN apt-get remove -y gcc && apt-get autoremove -y && pip-autoremove -y poetry pip-autoremove
 
 COPY . /code
 CMD ./startup-script.sh
