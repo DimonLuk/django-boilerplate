@@ -13,11 +13,13 @@ class ErrorFormatterMiddleware:
     def __call__(self, request):
         response = self.get_response(request)
         if (
-            response.status_code in settings.HELPERS.get("ERROR_CODES_TO_CATCH", [])
+            response.status_code
+            in settings.HELPERS.get("ERROR_CODES_TO_CATCH", [])
             and not settings.DEBUG
         ):
             response = JsonResponse(
-                {"detail": "Internal server error"}, status=response.status_code
+                {"detail": "Internal server error"},
+                status=response.status_code,
             )
         return response
 
@@ -29,7 +31,9 @@ class ResponseMetaInformationMiddleware:
     def __call__(self, request):
         response = self.get_response(request)
         if settings.HELPERS.get("INCLUDE_META_INFO", None):
-            timestamp = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+            timestamp = datetime.datetime.now().strftime(
+                "%Y-%m-%dT%H:%M:%S.%fZ"
+            )
 
             if settings.HELPERS.get("META_INFO_IN_HEADERS", None):
 
@@ -43,7 +47,9 @@ class ResponseMetaInformationMiddleware:
 
                 if "hash" in settings.HELPERS.get("META_INFO", []):
                     response_hash = timestamp + str(response)
-                    response_hash = hashlib.md5(response_hash.encode()).hexdigest()
+                    response_hash = hashlib.md5(
+                        response_hash.encode()
+                    ).hexdigest()
                     response["H-Response-Hash"] = response_hash
 
             elif settings.HELPERS.get("META_INFO_IN_JSON_RESPONSE", None):
@@ -66,7 +72,9 @@ class ResponseMetaInformationMiddleware:
 
                 if "hash" in settings.HELPERS.get("META_INFO", []):
                     response_hash = timestamp + json.dumps(json_data)
-                    response_hash = hashlib.md5(response_hash.encode()).hexdigest()
+                    response_hash = hashlib.md5(
+                        response_hash.encode()
+                    ).hexdigest()
                     meta_info["response_hash"] = hashlib.md5(
                         response_hash.encode()
                     ).hexdigest()

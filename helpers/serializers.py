@@ -12,17 +12,23 @@ class MetaInfoInnerSerializerMixin(serializers.Serializer):
                 )
 
             if "timestamp" in settings.HELPERS.get("META_INFO", []):
-                self.fields["timestamp"] = serializers.CharField(read_only=True)
+                self.fields["timestamp"] = serializers.CharField(
+                    read_only=True
+                )
 
             if "hash" in settings.HELPERS.get("META_INFO", []):
-                self.fields["response_hash"] = serializers.CharField(read_only=True)
+                self.fields["response_hash"] = serializers.CharField(
+                    read_only=True
+                )
 
 
 class MetaInfoSerializerMixin(serializers.Serializer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if settings.HELPERS.get("META_INFO_IN_JSON_RESPONSE", None):
-            self.fields["_meta_info"] = MetaInfoInnerSerializerMixin(read_only=True)
+            self.fields["_meta_info"] = MetaInfoInnerSerializerMixin(
+                read_only=True
+            )
 
 
 class DetailSerializer(MetaInfoSerializerMixin, serializers.Serializer):

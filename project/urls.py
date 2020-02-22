@@ -29,7 +29,9 @@ api_info = openapi.Info(
     contact=openapi.Contact(email="dimonluk2.0@gmail.com"),
 )
 
-schema_view = get_schema_view(public=True, url=settings.HELPERS["PROJECT_URL"],)
+schema_view = get_schema_view(
+    public=True, url=settings.HELPERS["PROJECT_URL"],
+)
 
 
 if settings.HELPERS["SWAGGER_SCHEMA_NO_AUTH"]:
