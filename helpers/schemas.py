@@ -38,7 +38,7 @@ class Schema:
         if self._is_catch_500_error:
             self.response_500 = DetailSerializer
         else:
-            self.response_500 = response_500
+            self.response_500 = response_500  # pragma: no cover
 
     @property
     def _is_catch_500_error(self):
