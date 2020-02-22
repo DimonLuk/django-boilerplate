@@ -16,6 +16,13 @@ to add tests.
 import subprocess
 import os
 
+from .constants import (
+    FILE_WITH_IMAGE_STATUS,
+    DEVELOPMENT_IMAGE,
+    TEST_IMAGE,
+    ALLOW_SUDO_USAGE_ENV_VAR,
+)
+
 
 class BaseTerminalCommand:
     command = None
@@ -23,30 +30,30 @@ class BaseTerminalCommand:
     commands_to_run_after = None
     sudo_required = False
 
-    @property
-    def command_(self):
-        if os.environ.get("HELPERS_ALLOW_SUDO", None) and self.sudo_required:
-            return f"sudo {self.command}"
-        else:
-            return self.command
-
-    def run(self):
-        subprocess.run(self.command_, shell=True)
-
     def start(self):
-        self.run_before()
-        self.run()
-        self.run_after()
+        self._run_before()
+        self._run()
+        self._run_after()
 
-    def run_before(self):
+    def _run_before(self):
         if self.commands_to_run_before:
             for command in self.commands_to_run_before:
                 command.start()
 
-    def run_after(self):
+    def _run(self):
+        subprocess.run(self.full_command, shell=True)
+
+    def _run_after(self):
         if self.commands_to_run_after:
             for command in self.commands_to_run_after:
                 command.start()
+
+    @property
+    def full_command(self):
+        if os.environ.get(ALLOW_SUDO_USAGE_ENV_VAR, None) and self.sudo_required:
+            return f"sudo {self.command}"
+        else:
+            return self.command
 
 
 class RemovePycacheTerminalCommand(BaseTerminalCommand):
@@ -60,18 +67,18 @@ class ClearDatabaseTerminalCommand(BaseTerminalCommand):
 
 
 class ResetImageStatusTerminalCommand(BaseTerminalCommand):
-    command = "rm .image_status"
+    command = f"rm {FILE_WITH_IMAGE_STATUS}"
 
 
 class CreateImageStatusTerminalCommand(BaseTerminalCommand):
-    DEVELOPMENT = "DEVELOPMENT"
-    TEST = "TEST"
-
     def __init__(self, status):
         self.status = status
 
-    def run(self):
-        with open(".image_status", "w") as file:
+    def _run(self):
+        self._write_to_file()
+
+    def _write_to_file(self):
+        with open(FILE_WITH_IMAGE_STATUS, "w") as file:
             file.write(self.status)
 
 
@@ -83,48 +90,55 @@ class StartTestDatabaseTerminalCommand(BaseTerminalCommand):
     command = "docker-compose -f docker-compose.test.yaml up -d database"
 
 
-class BuildDockerComposeImagesTerminalCommand(BaseTerminalCommand):
+class BaseBuildDockerComposeImagesTerminalCommand(BaseTerminalCommand):
     command = "docker-compose build"
     sudo_required = True
     commands_to_run_before = [RemovePycacheTerminalCommand()]
 
-    def run(self):
-        exists = os.path.isfile(".image_status")
-        if exists:
-            with open(".image_status", "r") as file:
-                status = file.read()
-            is_build = status == CreateImageStatusTerminalCommand.TEST
+    def _run(self):
+        if self._file_exists:
+            status = self._read_from_file()
+            to_build = self._need_rebuilding(status)
         else:
-            is_build = not exists
+            to_build = True
+        if to_build:
+            subprocess.run(self.full_command, shell=True)
 
-        if is_build:
-            subprocess.run(self.command_, shell=True)
-        command = CreateImageStatusTerminalCommand(
-            CreateImageStatusTerminalCommand.DEVELOPMENT
-        )
-        command.start()
+        self._update_status()
+
+    @property
+    def _file_exists(self):
+        return os.path.isfile(FILE_WITH_IMAGE_STATUS)
+
+    def _read_from_file(self):
+        with open(FILE_WITH_IMAGE_STATUS, "r") as file:
+            return file.read()
+
+    def _need_rebuilding(self, status):
+        raise NotImplementedError
+
+    def _update_status(self):
+        raise NotImplementedError
 
 
-class BuildDockerComposeTestImagesTerminalCommand(BaseTerminalCommand):
-    command = "docker-compose -f docker-compose.test.yaml build"
-    sudo_required = True
-    commands_to_run_before = [RemovePycacheTerminalCommand()]
+class BuildDockerComposeImagesTerminalCommand(
+    BaseBuildDockerComposeImagesTerminalCommand
+):
+    def _need_rebuilding(self, status):
+        return status == TEST_IMAGE
 
-    def run(self):
-        exists = os.path.isfile(".image_status")
-        if exists:
-            with open(".image_status", "r") as file:
-                status = file.read()
-            is_build = status == CreateImageStatusTerminalCommand.DEVELOPMENT
-        else:
-            is_build = not exists
+    def _update_status(self):
+        CreateImageStatusTerminalCommand(DEVELOPMENT_IMAGE).start()
 
-        if is_build:
-            subprocess.run(self.command_, shell=True)
-        command = CreateImageStatusTerminalCommand(
-            CreateImageStatusTerminalCommand.TEST
-        )
-        command.start()
+
+class BuildDockerComposeTestImagesTerminalCommand(
+    BaseBuildDockerComposeImagesTerminalCommand
+):
+    def _need_rebuilding(self, status):
+        return status == DEVELOPMENT_IMAGE
+
+    def _update_status(self):
+        CreateImageStatusTerminalCommand(TEST_IMAGE).start()
 
 
 class StopServicesTerminalCommand(BaseTerminalCommand):

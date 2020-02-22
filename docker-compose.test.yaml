@@ -14,6 +14,9 @@ services:
         - DJANGO_SETTINGS_MODULE=project.settings.testing
         - MODE=testing
       context: .
+    environment:
+      - DJANGO_SETTINGS_MODULE=project.settings.testing
+      - MODE=testing
     depends_on:
       - database
     volumes:
