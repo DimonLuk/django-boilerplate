@@ -37,3 +37,4 @@ pytest-cov = {version = "*"}
 snapshottest = {version = "*"}
 freezegun = {version = "*"}
 factory-boy = {version = "*"}
+django-webtest = {version = "*"}
