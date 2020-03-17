@@ -93,57 +93,6 @@ class StartTestDatabaseTerminalCommand(BaseTerminalCommand):
     command = "docker-compose -f docker-compose.test.yaml up -d database"
 
 
-class BaseBuildDockerComposeImagesTerminalCommand(BaseTerminalCommand):
-    command = "docker-compose build"
-    sudo_required = True
-    commands_to_run_before = [RemovePycacheTerminalCommand()]
-
-    def _run(self):
-        if self._file_exists:
-            status = self._read_from_file()
-            to_build = self._need_rebuilding(status)
-        else:
-            to_build = True
-        if to_build:
-            subprocess.run(self.full_command, shell=True)
-
-        self._update_status()
-
-    @property
-    def _file_exists(self):
-        return os.path.isfile(FILE_WITH_IMAGE_STATUS)
-
-    def _read_from_file(self):
-        with open(FILE_WITH_IMAGE_STATUS, "r") as file:
-            return file.read()
-
-    def _need_rebuilding(self, status):
-        raise NotImplementedError
-
-    def _update_status(self):
-        raise NotImplementedError
-
-
-class BuildDockerComposeImagesTerminalCommand(
-    BaseBuildDockerComposeImagesTerminalCommand
-):
-    def _need_rebuilding(self, status):
-        return status == TEST_IMAGE
-
-    def _update_status(self):
-        CreateImageStatusTerminalCommand(DEVELOPMENT_IMAGE).start()
-
-
-class BuildDockerComposeTestImagesTerminalCommand(
-    BaseBuildDockerComposeImagesTerminalCommand
-):
-    def _need_rebuilding(self, status):
-        return status == DEVELOPMENT_IMAGE
-
-    def _update_status(self):
-        CreateImageStatusTerminalCommand(TEST_IMAGE).start()
-
-
 class StopServicesTerminalCommand(BaseTerminalCommand):
     commands_to_run_before = [RemovePycacheTerminalCommand()]
     command = "docker-compose down"
@@ -160,7 +109,6 @@ class ListTerminalCommand(BaseTerminalCommand):
 class RunTestsTerminalCommand(BaseTerminalCommand):
     commands_to_run_before = [
         StopServicesTerminalCommand(),
-        BuildDockerComposeTestImagesTerminalCommand(),
         StartTestDatabaseTerminalCommand(),
     ]
     command = (
@@ -172,7 +120,6 @@ class RunTestsTerminalCommand(BaseTerminalCommand):
 class RunTestsInShellTerminalCommand(BaseTerminalCommand):
     commands_to_run_before = [
         StopServicesTerminalCommand(),
-        BuildDockerComposeTestImagesTerminalCommand(),
         StartTestDatabaseTerminalCommand(),
     ]
     command = (
@@ -183,7 +130,6 @@ class RunTestsInShellTerminalCommand(BaseTerminalCommand):
 class RunAppTerminalCommand(BaseTerminalCommand):
     commands_to_run_before = [
         StopServicesTerminalCommand(),
-        BuildDockerComposeImagesTerminalCommand(),
         StartDatabaseTerminalCommand(),
     ]
     command = "docker-compose up -d"
@@ -192,7 +138,10 @@ class RunAppTerminalCommand(BaseTerminalCommand):
 class RunAppInShellTerminalCommand(BaseTerminalCommand):
     commands_to_run_before = [
         StopServicesTerminalCommand(),
-        BuildDockerComposeImagesTerminalCommand(),
         StartDatabaseTerminalCommand(),
     ]
     command = "docker-compose run -p 8000:80 project /bin/bash"
+
+
+class RemoveDockerImage(BaseTerminalCommand):
+    command = "docker-compose build --no-cache"

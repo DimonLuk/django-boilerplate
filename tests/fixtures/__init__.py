@@ -1,1 +1,1 @@
-from .general import drf_client  # NOQA
+from .general import app  # NOQA
