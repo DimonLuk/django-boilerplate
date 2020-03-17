@@ -1,4 +1,5 @@
 FROM python:3.8-slim
+ENV LC_ALL="en_US.UTF-8"
 
 ARG MODE
 ENV MODE $MODE
