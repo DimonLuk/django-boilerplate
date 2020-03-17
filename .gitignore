@@ -132,7 +132,6 @@ pytags
 jstags
 .env
 __postgres_data__/
-.image_status
 test-report.xml
 static/
 .token
