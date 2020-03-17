@@ -25,6 +25,7 @@ class Command(BaseCommand):
         )
         parser.add_argument("--rebuild", dest="rebuild", action="store_true")
         parser.set_defaults(noninteractive=False)
+        parser.set_defaults(rebuild=False)
 
     def handle(self, *args, **options):
         if options["rebuild"]:
